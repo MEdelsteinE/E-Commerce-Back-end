@@ -42,34 +42,15 @@ router.get('/:id', async (req, res) => {
 });
 
 // create new product
-router.post('/', async (req, res) => {
-  try {
-    const { product_name, price, stock, tagIds } = req.body;
-
-    // Creates new product
-    const newProduct = await Product.create({
-      product_name,
-      price,
-      stock,
-    });
-
-    // Creates product tag for any tags 
-    if (tagIds && tagIds.length) {
-      const productTagIdArr = tagIds.map((tag_id) => {
-        return {
-          product_id: newProduct.id,
-          tag_id,
-        };
-      });
-
-      await ProductTag.bulkCreate(productTagIdArr);
+router.post('/', (req, res) => {
+  /* req.body should look like this...
+    {
+      product_name: "Basketball",
+      price: 200.00,
+      stock: 3,
+      tagIds: [1, 2, 3, 4]
     }
-
-    res.status(200).json({ message: 'Product created successfully', product: newProduct });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Server error' });
-  }
+  */
   Product.create(req.body)
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
