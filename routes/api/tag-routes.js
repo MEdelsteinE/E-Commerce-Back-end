@@ -2,11 +2,10 @@ const router = require('express').Router();
 const { Tag, Product, ProductTag } = require('../../models');
 
 // The `/api/tags` endpoint
-
+// find all tags
+// be sure to include its associated Product data
 router.get('/', async (req, res) => {
   try {
-    // find all tags
-    // be sure to include its associated Product data
     const tags = await Tag.findAll({
       include: [
         {
@@ -21,11 +20,10 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
-
+ // find a single tag by its `id`
+ // be sure to include its associated Product data
 router.get('/:id', async (req, res) => {
   try {
-    // find a single tag by its `id`
-    // be sure to include its associated Product data
     const tag = await Tag.findByPk(req.params.id, {
       include: [
         {
@@ -45,21 +43,19 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
-
+ // create a new tag
 router.post('/', async (req, res) => {
   try {
-    // create a new tag
-    const newTag = await Tag.create(req.body);
+   const newTag = await Tag.create(req.body);
     res.json(newTag);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server error' });
   }
 });
-
+// update a tag's name by its `id` value
 router.put('/:id', async (req, res) => {
   try {
-    // update a tag's name by its `id` value
     await Tag.update(req.body, {
       where: {
         id: req.params.id,
@@ -71,10 +67,9 @@ router.put('/:id', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
-
+ // delete one tag by its `id` value
 router.delete('/:id', async (req, res) => {
   try {
-    // delete one tag by its `id` value
     await Tag.destroy({
       where: {
         id: req.params.id,
